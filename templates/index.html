@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <style>
+        .content{
+            display:flex;
+       }
+
+    </style>
+</head>
+<body>
+<h1>{{name}}</h1>
+<div class="content">
+    <textarea id="text-name" placeholder="name"></textarea>
+    <textarea id="text-age" placeholder="age"></textarea>
+    <button id="request-btn">Отправить</button>
+</div>
+<pre id="output"></pre>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const outputArea = document.getElementById('outputArea');
+    document.getElementById('request-btn').addEventListener('click', function(){
+        const name = document.getElementById('text-name').value;
+        const age = document.getElementById('text-age').value;
+        const data = {
+            "name": name,
+            "age": age
+        };
+        fetch("/dataset/snapshot",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+        .then((response) => response.json())
+        .then((result) => {
+            output.innerText = `Name:${result.data['name']}\nAge:${result.data['age']}` || "No output";
+        })
+        .catch((error) => {
+            output.innerText = "Error: " + error.message;
+        });
+    });
+});
+</script>
+</body>
+</html>
